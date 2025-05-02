@@ -54,7 +54,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/cloudrest-webcloud:latest
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/cloudrest-webcloud:latest
 
     
     # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
