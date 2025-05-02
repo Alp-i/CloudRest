@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  mysql:
+    container_name: 'mysql-db'
+    image: 'mysql:8.0'
+    restart: 'on-failure'
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Gokberk.54'
+      MYSQL_DATABASE: 'swe304_new'
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./swe304dump.sql:/docker-entrypoint-initdb.d/swe304dump.sql   # ← EKLENDİ
+    networks:
+      - 'mynetwork'
+
+  webcloud:
+    container_name: 'webcloud-app'
+    build: .
+    restart: 'on-failure'
+    depends_on:
+      - 'mysql'
+    ports:
+      - '8080:8080'
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql-db:3306/swe304_new'  # ← HOSTNAME DÜZELTİLDİ
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'Gokberk.54'
+    networks:
+      - 'mynetwork'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  mysql_data:
