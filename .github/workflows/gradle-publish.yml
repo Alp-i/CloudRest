@@ -12,6 +12,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+
+
+env:
+  JAR_FILE: build/libs/*.jar
     
 jobs:
   build:
@@ -38,6 +42,17 @@ jobs:
 
     - name: Build with Gradle (skip tests)
       run: ./gradlew clean build -x test
+
+    - name: Deploy JAR to Azure VM
+      uses: appleboy/scp-action@v1
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USERNAME }}
+        password: ${{ secrets.AZURE_VM_PASSWORD }}
+        port: ${{ secrets.AZURE_VM_PORT || '22' }}
+        source: ${{ env.JAR_FILE }}
+        target: "/home/Azureuser_54"
+        overwrite: true
 
         
     -
